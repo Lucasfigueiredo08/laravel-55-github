@@ -3,7 +3,10 @@
 namespace App\Http\Controllers\Painel;
 
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\Controller; 
+use App\Models\Reserve;
+use App\Models\Flight; 
+use App\User;
 
 class ReservesController extends Controller
 {
@@ -18,7 +21,7 @@ class ReservesController extends Controller
     {
         $title = "Reservas de Passagens aéreas";
 
-        $reserves = $this->reserve->with(['user', 'flight '])->paginate($this->totalPage);
+        $reserves = $this->reserve->with(['user', 'flight'])->paginate($this->totalPage);
 
         return view('painel.reserves.index', compact('title', 'reserves'));
     }
@@ -30,7 +33,14 @@ class ReservesController extends Controller
      */
     public function create()
     {
-        //
+        $title = 'Nova Reserva';
+
+        $users = User::pluck('name', 'id');
+        $flights = Flight::pluck('id', 'id');
+
+        $status = $this->reserve->status();
+
+        return view('painel.reserves.create', compact('title', 'users', 'flights', 'status'));
     }
 
     /**
